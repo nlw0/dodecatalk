@@ -1,0 +1,39 @@
+<!--
+  Copyright (c) 2015, <your name>. All rights reserved. Use of this source code
+  is governed by a BSD-style license that can be found in the LICENSE file.
+-->
+
+<!-- import polymer-element's definition -->
+<link rel="import" href="../../packages/polymer/polymer.html">
+
+<link rel="import" href="../../packages/paper_elements/paper_input.html">
+
+<polymer-element name="main-app">
+  <template>
+    <style>
+      :host {
+      display: block;
+      }
+
+      div.key{
+      display: inline-block;
+      width: 40px;
+      height: 120px;
+      background: #8888ff;
+      text-align: center;
+      border: 2px solid;
+      border-radius: 4px;
+      }
+    </style>
+
+    <div class="key" on-click="{{coisa}}" data-note="C4">C4</div>
+    <div class="key" on-click="{{coisa}}" data-note="D4">D4</div>
+    <div class="key" on-click="{{coisa}}" data-note="E4">E4</div>
+    <div class="key" on-click="{{coisa}}" data-note="F4">F4</div>
+    <div class="key" on-click="{{coisa}}" data-note="G4">G4</div>
+    <div class="key" on-click="{{coisa}}" data-note="A4">A4</div>
+    <div class="key" on-click="{{coisa}}" data-note="B4">B4</div>
+    <div class="key" on-click="{{coisa}}" data-note="C5">C5</div>
+  </template>
+  <script type="application/dart" src="main_app.dart"></script>
+</polymer-element>
