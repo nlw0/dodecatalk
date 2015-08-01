@@ -1,12 +1,4 @@
-<!--
-  Copyright (c) 2015, <your name>. All rights reserved. Use of this source code
-  is governed by a BSD-style license that can be found in the LICENSE file.
--->
-
-<!-- import polymer-element's definition -->
 <link rel="import" href="../../packages/polymer/polymer.html">
-
-<link rel="import" href="../../packages/paper_elements/paper_input.html">
 
 <polymer-element name="main-app">
   <template>
@@ -15,7 +7,7 @@
       display: block;
       }
 
-      div.key{
+      div.musical_key {
       display: inline-block;
       width: 40px;
       height: 120px;
@@ -24,16 +16,15 @@
       border: 2px solid;
       border-radius: 4px;
       }
+      div.pressed_key {
+      background: #ffff88;
+      }
     </style>
-    <div>
-      <div class="key" on-click="{{playFromClick}}" data-note="C4">C4<br/>A</div>
-      <div class="key" on-click="{{playFromClick}}" data-note="D4">D4<br/>S</div>
-      <div class="key" on-click="{{playFromClick}}" data-note="E4">E4<br/>D</div>
-      <div class="key" on-click="{{playFromClick}}" data-note="F4">F4<br/>F</div>
-      <div class="key" on-click="{{playFromClick}}" data-note="G4">G4<br/>G</div>
-      <div class="key" on-click="{{playFromClick}}" data-note="A4">A4<br/>H</div>
-      <div class="key" on-click="{{playFromClick}}" data-note="B4">B4<br/>J</div>
-      <div class="key" on-click="{{playFromClick}}" data-note="C5">C5<br/>K</div>
+    <div id="keypad">
+      <p style="font-family:'Cookie'; font-size: 40px">play happy tunes</p>
+      <template repeat="{{ note in noteNames }}">
+        <div id="key-{{note}}" class="musical_key" on-click="{{playFromClick}}" data-note="{{note}}">{{note}}<br/>{{keyLabel[note]}}</div>
+      </template>
     </div>
   </template>
   <script type="application/dart" src="main_app.dart"></script>

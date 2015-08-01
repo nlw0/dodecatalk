@@ -1,128 +1,99 @@
-// Copyright (c) 2015, <your name>. All rights reserved. Use of this source code
-// is governed by a BSD-style license that can be found in the LICENSE file.
-
 import 'dart:html';
 import 'dart:web_audio';
 
 import 'package:polymer/polymer.dart';
-import 'dart:collection';
-
-typedef void OnLoadCallback(List<AudioBuffer> bufferList);
-
-class BufferLoader {
-  AudioContext audioCtx;
-  List<String> urlList;
-  OnLoadCallback callback;
-  int _loadCount = 0;
-  List<AudioBuffer> _bufferList;
-
-  BufferLoader(this.audioCtx, this.urlList, this.callback) {
-    _bufferList = new List<AudioBuffer>(urlList.length);
-  }
-
-  void load() {
-    for (var i = 0; i < urlList.length; i++) {
-      _loadBuffer(urlList[i], i);
-    }
-  }
-
-  void _loadBuffer(String url, int index) {
-    // Load the buffer asynchronously.
-    var request = new HttpRequest();
-    request.open("GET", url, async: true);
-    request.responseType = "arraybuffer";
-    request.onLoad.listen((e) => _onLoad(request, url, index));
-
-    // Don't use alert in real life ;)
-    request.onError.listen((e) => window.alert("BufferLoader: XHR error"));
-
-    request.send();
-  }
-
-  void _onLoad(HttpRequest request, String url, int index) {
-    // Asynchronously decode the audio file data in request.response.
-    audioCtx.decodeAudioData(request.response).then((AudioBuffer buffer) {
-      if (buffer == null) {
-
-        // Don't use alert in real life ;)
-        window.alert("Error decoding file data: $url");
-
-        return;
-      }
-      _bufferList[index] = buffer;
-      if (++_loadCount == urlList.length) callback(_bufferList);
-    });
-  }
-}
-
+import 'package:dodecatalk/buffer_loader.dart';
 
 /// A Polymer `<main-app>` element.
 @CustomTag('main-app')
 class MainApp extends PolymerElement {
-  @observable String reversed = 'aaa';
-
-  Map<String, AudioBuffer> buffers;
-  AudioContext audioCtx;
-
-  static const buffersToLoad = const {
-    "C4": "sounds/mandolin_C4_very-long_piano_normal.mp3",
-    "D4": "sounds/mandolin_D4_very-long_piano_normal.mp3",
-    "E4": "sounds/mandolin_E4_very-long_piano_normal.mp3",
-    "F4": "sounds/mandolin_F4_very-long_piano_normal.mp3",
-    "G4": "sounds/mandolin_G4_very-long_piano_normal.mp3",
-    "A4": "sounds/mandolin_A4_very-long_piano_normal.mp3",
-    "B4": "sounds/mandolin_B4_very-long_piano_normal.mp3",
-    "C5": "sounds/mandolin_C5_very-long_piano_normal.mp3"
-  };
+  final noteNames = [
+    'C4',
+    'D4',
+    'E4',
+    'F4',
+    'G4',
+    'A4',
+    'B4',
+    'C5'
+  ];
 
   static const keyboardTranslation = const {
-    KeyCode.A : "C4",
-    KeyCode.S : "D4",
-    KeyCode.D : "E4",
-    KeyCode.F : "F4",
-    KeyCode.G : "G4",
-    KeyCode.H : "A4",
-    KeyCode.J : "B4",
-    KeyCode.K : "C5"
+    KeyCode.A: 'C4',
+    KeyCode.S: 'D4',
+    KeyCode.D: 'E4',
+    KeyCode.F: 'F4',
+    KeyCode.G: 'G4',
+    KeyCode.H: 'A4',
+    KeyCode.J: 'B4',
+    KeyCode.K: 'C5'
+  };
+
+  final keyLabel = const {
+    'C4': 'A',
+    'D4': 'S',
+    'E4': 'D',
+    'F4': 'F',
+    'G4': 'G',
+    'A4': 'H',
+    'B4': 'J',
+    'C5': 'K'
   };
 
 
+  final AudioContext audioCtx = new AudioContext();
+
+  Map<String, AudioBuffer> buffers;
+
   MainApp.created() : super.created() {
-    buffers = new Map<String, AudioBuffer>();
-    audioCtx = new AudioContext();
     _loadBuffers();
 
-    window.onKeyDown.listen((KeyboardEvent e) {
-      if (keyboardTranslation.containsKey(e.keyCode))
-        _play(keyboardTranslation[e.keyCode]);
-    });
+    window.onKeyDown.listen(handleKeyDown);
+    window.onKeyUp.listen(handleKeyUp);
   }
 
+  handleKeyDown(KeyboardEvent e) {
+    if (keyboardTranslation.containsKey(e.keyCode)) {
+      final note = keyboardTranslation[e.keyCode];
+      play(note);
+      final key = shadowRoot.querySelector("#key-$note");
+      key.classes.add("pressed_key");
+    }
+  }
+
+  handleKeyUp(KeyboardEvent e) {
+    if (keyboardTranslation.containsKey(e.keyCode)) {
+      final note = keyboardTranslation[e.keyCode];
+      final key = shadowRoot.querySelector("#key-$note");
+      key.classes.remove("pressed_key");
+    }
+  }
+
+
   void _loadBuffers() {
-    List<String> names = buffersToLoad.keys.toList();
-    List<String> paths = buffersToLoad.values.toList();
-    var bufferLoader = new BufferLoader(audioCtx, paths, (List<AudioBuffer> bufferList) {
-      for (var i = 0; i < bufferList.length; i++) {
-        AudioBuffer buffer = bufferList[i];
-        String name = names[i];
-        buffers[name] = buffer;
-      }
-    });
+    final paths = noteNames.map(_noteFilename).toList();
+    final bufferLoader = new BufferLoader(audioCtx, paths, _buildBuffersMap);
     bufferLoader.load();
   }
 
+  String _noteFilename(String note) {
+    return 'sounds/piano-${note}.mp3';
+    //return 'sounds/guitar_${note}_very-long_forte_normal.mp3';
+    //return 'sounds/mandolin_${note}_very-long_piano_normal.mp3';
+  }
+
+  _buildBuffersMap(List<AudioBuffer> bufferList) {
+    buffers = new Map<String, AudioBuffer>.fromIterables(noteNames, bufferList);
+  }
+
   playFromClick(Event e, var detail, Node target) {
-    _play(target.attributes['data-note']);
+    play(target.attributes['data-note']);
   }
 
-  _play(note) {
-    var _source = audioCtx.createBufferSource();
-    _source.buffer = buffers[note];
-    _source.connectNode(audioCtx.destination, 0, 0);
-    _source.start(0);
-  }
-
-  wakka() {
-    Console.log("wakkwakkawakka");
+  play(note) {
+    final source = audioCtx.createBufferSource();
+    source.buffer = buffers[note];
+    source.connectNode(audioCtx.destination, 0, 0);
+    source.start(0);
   }
 }
