@@ -4,8 +4,8 @@
 import 'dart:html';
 import 'dart:web_audio';
 
-import 'package:paper_elements/paper_input.dart';
 import 'package:polymer/polymer.dart';
+import 'dart:collection';
 
 typedef void OnLoadCallback(List<AudioBuffer> bufferList);
 
@@ -75,10 +75,27 @@ class MainApp extends PolymerElement {
     "C5": "sounds/mandolin_C5_very-long_piano_normal.mp3"
   };
 
+  static const keyboardTranslation = const {
+    KeyCode.A : "C4",
+    KeyCode.S : "D4",
+    KeyCode.D : "E4",
+    KeyCode.F : "F4",
+    KeyCode.G : "G4",
+    KeyCode.H : "A4",
+    KeyCode.J : "B4",
+    KeyCode.K : "C5"
+  };
+
+
   MainApp.created() : super.created() {
     buffers = new Map<String, AudioBuffer>();
     audioCtx = new AudioContext();
     _loadBuffers();
+
+    window.onKeyDown.listen((KeyboardEvent e) {
+      if (keyboardTranslation.containsKey(e.keyCode))
+        _play(keyboardTranslation[e.keyCode]);
+    });
   }
 
   void _loadBuffers() {
@@ -94,7 +111,7 @@ class MainApp extends PolymerElement {
     bufferLoader.load();
   }
 
-  coisa(Event e, var detail, Node target) {
+  playFromClick(Event e, var detail, Node target) {
     _play(target.attributes['data-note']);
   }
 
@@ -104,5 +121,8 @@ class MainApp extends PolymerElement {
     _source.connectNode(audioCtx.destination, 0, 0);
     _source.start(0);
   }
-}
 
+  wakka() {
+    Console.log("wakkwakkawakka");
+  }
+}
