@@ -2,10 +2,27 @@
 
 <polymer-element name="dodecatalk-message">
   <template>
+    <style>
+      :host {
+      display: block;
+      }
+
+      div.song {
+      background: #ff9977;
+      border: 2px solid;
+      border-radius: 4px;
+      }
+      div.pressed_key {
+        background: #ffff88;
+      }
+    </style>
     <div>
-      <label>Let me sing an ancient song from my people</label>
-      <div class="song" on-click="{{playSong}}">
-        c3 d3 e3*2 c3 e3
+      <p style="font-family:'Cookie'; font-size: 24px">Let me sing a song from my people</p>
+      <div class="song" on-mousedown="{{handleMousedown}}">
+        C4 D4 E4 F4 p F4 F4 p C4 D4 C4 D4 p D4 D4 p C4 G4 F4 E4 p E4 E4 p C4 D4 E4 F4 p F4 F4 p
+      </div>
+      <div class="song" on-mousedown="{{handleMousedown}}">
+        C4 C4 D4 E4 C4 E4 D4 p C4 C4 D4 E4 C4 P B3 p C4 C4 D4 E4 F4 E4 D4 C4 B3 G3 A3 B3 C4 P C4
       </div>
     </div>
   </template>

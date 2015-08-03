@@ -1,12 +1,12 @@
 import 'dart:html';
-import 'dart:web_audio';
 
 import 'package:polymer/polymer.dart';
-import 'package:dodecatalk/buffer_loader.dart';
+import 'package:dodecatalk/sound_player.dart';
 
 @CustomTag('dodecatalk-keypad')
 class Keypad extends PolymerElement {
-  final noteNames = [
+
+  final keyNotes = [
     'C4',
     'D4',
     'E4',
@@ -39,14 +39,9 @@ class Keypad extends PolymerElement {
     'C5': 'K'
   };
 
-
-  final AudioContext audioCtx = new AudioContext();
-
-  Map<String, AudioBuffer> buffers;
+  get player => SoundPlayer.instance;
 
   Keypad.created() : super.created() {
-    _loadBuffers();
-
     window.onKeyDown.listen(handleKeyDown);
     window.onKeyUp.listen(handleKeyUp);
   }
@@ -54,7 +49,7 @@ class Keypad extends PolymerElement {
   handleKeyDown(KeyboardEvent e) {
     if (keyboardTranslation.containsKey(e.keyCode)) {
       final note = keyboardTranslation[e.keyCode];
-      play(note);
+      player.play(note);
       final key = shadowRoot.querySelector("#key-$note");
       key.classes.add("pressed_key");
     }
@@ -68,35 +63,12 @@ class Keypad extends PolymerElement {
     }
   }
 
-  void _loadBuffers() {
-    final paths = noteNames.map(_noteFilename).toList();
-    final bufferLoader = new BufferLoader(audioCtx, paths, _buildBuffersMap);
-    bufferLoader.load();
-  }
-
-  String _noteFilename(String note) {
-    return 'sounds/piano-${note}.mp3';
-    //return 'sounds/guitar_${note}_very-long_forte_normal.mp3';
-    //return 'sounds/mandolin_${note}_very-long_piano_normal.mp3';
-  }
-
-  _buildBuffersMap(List<AudioBuffer> bufferList) {
-    buffers = new Map<String, AudioBuffer>.fromIterables(noteNames, bufferList);
-  }
-
   handleMousedown(Event e, var detail, Node target) {
-    play(target.attributes['data-note']);
+    player.play(target.attributes['data-note']);
     target.classes.add("pressed_key");
   }
 
   handleMouseup(Event e, var detail, Node target) {
     target.classes.remove("pressed_key");
-  }
-
-  play(note) {
-    final source = audioCtx.createBufferSource();
-    source.buffer = buffers[note];
-    source.connectNode(audioCtx.destination, 0, 0);
-    source.start(0);
   }
 }
