@@ -69,7 +69,6 @@ class MainApp extends PolymerElement {
     }
   }
 
-
   void _loadBuffers() {
     final paths = noteNames.map(_noteFilename).toList();
     final bufferLoader = new BufferLoader(audioCtx, paths, _buildBuffersMap);
@@ -86,9 +85,15 @@ class MainApp extends PolymerElement {
     buffers = new Map<String, AudioBuffer>.fromIterables(noteNames, bufferList);
   }
 
-  playFromClick(Event e, var detail, Node target) {
+  handleMousedown(Event e, var detail, Node target) {
     play(target.attributes['data-note']);
+    target.classes.add("pressed_key");
   }
+
+  handleMouseup(Event e, var detail, Node target) {
+    target.classes.remove("pressed_key");
+  }
+
 
   play(note) {
     final source = audioCtx.createBufferSource();

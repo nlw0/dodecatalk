@@ -21,10 +21,19 @@
       }
     </style>
     <div id="keypad">
-      <p style="font-family:'Cookie'; font-size: 40px">play happy tunes</p>
-      <template repeat="{{ note in noteNames }}">
-        <div id="key-{{note}}" class="musical_key" on-click="{{playFromClick}}" data-note="{{note}}">{{note}}<br/>{{keyLabel[note]}}</div>
-      </template>
+      <p style="font-family:'Cookie'; font-size: 40px; text-align:center">play happy tunes</p>
+      <div align="center">
+        <template repeat="{{ note in noteNames }}">
+          <div id="key-{{note}}"
+               class="musical_key"
+               on-mousedown="{{handleMousedown}}"
+               on-mouseup="{{handleMouseup}}"
+               on-mouseleave="{{handleMouseup}}"
+               data-note="{{note}}">
+            {{note}}<br/>{{keyLabel[note]}}
+          </div>
+        </template>
+      </div>
     </div>
   </template>
   <script type="application/dart" src="main_app.dart"></script>
