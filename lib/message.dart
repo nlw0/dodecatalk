@@ -4,4 +4,8 @@ import 'package:polymer/polymer.dart';
 class Message extends PolymerElement {
   Message.created() : super.created() {
   }
+
+  playSong() {
+    print('sing a happy song');
+  }
 }
