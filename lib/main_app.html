@@ -1,40 +1,11 @@
 <link rel="import" href="../../packages/polymer/polymer.html">
+<link rel="import" href="keypad.html">
+<link rel="import" href="message.html">
 
 <polymer-element name="main-app">
   <template>
-    <style>
-      :host {
-      display: block;
-      }
-
-      div.musical_key {
-      display: inline-block;
-      width: 40px;
-      height: 120px;
-      background: #8888ff;
-      text-align: center;
-      border: 2px solid;
-      border-radius: 4px;
-      }
-      div.pressed_key {
-      background: #ffff88;
-      }
-    </style>
-    <div id="keypad">
-      <p style="font-family:'Cookie'; font-size: 40px; text-align:center">play happy tunes</p>
-      <div align="center">
-        <template repeat="{{ note in noteNames }}">
-          <div id="key-{{note}}"
-               class="musical_key"
-               on-mousedown="{{handleMousedown}}"
-               on-mouseup="{{handleMouseup}}"
-               on-mouseleave="{{handleMouseup}}"
-               data-note="{{note}}">
-            {{note}}<br/>{{keyLabel[note]}}
-          </div>
-        </template>
-      </div>
-    </div>
+    <div>oi</div>
+    <keypad></keypad>
+    <message></message>
   </template>
-  <script type="application/dart" src="main_app.dart"></script>
 </polymer-element>
