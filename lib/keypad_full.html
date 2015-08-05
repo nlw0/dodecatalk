@@ -1,0 +1,60 @@
+<link rel="import" href="../../packages/polymer/polymer.html">
+
+<polymer-element name="dodecatalk-keypad-full">
+  <template>
+    <style>
+      :host {
+      display: block;
+      }
+
+      div.musical_key {
+      display: inline-block;
+      width: 30px;
+      height: 60px;
+      background: #8888ff;
+      text-align: center;
+      border: 2px solid;
+      border-radius: 4px;
+      }
+      div.pressed_key {
+      background: #ffff88;
+      }
+      div.empty_key {
+      display: inline-block;
+      width: 30px;
+      height: 60px;
+      background: #ffffff00;
+      border: 2px solid;
+      border-radius: 4px;
+      border-color: white;
+      }
+    </style>
+    <div id="keypad">
+      <p style="font-family:'Cookie'; font-size: 40px; text-align:center">play happy tunes</p>
+
+      <div align="center">
+        <template repeat="{{ key_row in this.keyNotes }}">
+          <template repeat="{{ note in key_row }}">
+            <template if="{{note == ' '}}">
+              <div class="empty_key">
+                &nbsp;<br/>&nbsp;
+              </div>
+            </template>
+            <template if="{{note != ' '}}">
+              <div id="key-{{note}}"
+                   class="musical_key"
+                   on-mousedown="{{handleMousedown}}"
+                   on-mouseup="{{handleMouseup}}"
+                   on-mouseleave="{{handleMouseup}}"
+                   data-note="{{note}}">
+                {{note}}<br/>{{keyLabel[note]}}
+              </div>
+            </template>
+          </template>
+          <br/>
+        </template>
+      </div>
+    </div>
+  </template>
+  <script type="application/dart" src="keypad_full.dart"></script>
+</polymer-element>

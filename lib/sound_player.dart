@@ -7,25 +7,10 @@ class SoundPlayer {
   Map<String, AudioBuffer> buffers;
 
   final noteNames = [
-    'F3',
-    'G3',
-    'A3',
-    'B3',
-    'C4',
-    'D4',
-    'E4',
-    'F4',
-    'G4',
-    'A4',
-    'B4',
-    'C5',
-    'D5',
-    'E5',
-    'F5',
-    'G5',
-    'A5',
-    'B5',
-    'C6'
+    'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'As0', 'As1', 'As2', 'As3', 'As4', 'As5', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5',
+    'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'Cs1', 'Cs2', 'Cs3', 'Cs4', 'Cs5', 'Cs6', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6',
+    'Ds1', 'Ds2', 'Ds3', 'Ds4', 'Ds5', 'Ds6', 'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'F1', 'F2', 'F3', 'F4', 'F5', 'Fs1',
+    'Fs2', 'Fs3', 'Fs4', 'Fs5', 'G1', 'G2', 'G3', 'G4', 'G5', 'Gs1', 'Gs2', 'Gs3', 'Gs4', 'Gs5'
   ];
 
   SoundPlayer._internal() {
