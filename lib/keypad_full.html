@@ -28,10 +28,16 @@
       border-radius: 4px;
       border-color: white;
       }
+      div.my-button {
+      display: inline-block;
+      height: 20px;
+      background: #ffeeaa;
+      text-align: center;
+      border: 2px solid;
+      border-radius: 4px;
+      }
     </style>
     <div id="keypad">
-      <p style="font-family:'Cookie'; font-size: 40px; text-align:center">play happy tunes</p>
-
       <div align="center">
         <template repeat="{{ key_row in this.keyNotes }}">
           <template repeat="{{ note in key_row }}">
@@ -54,6 +60,14 @@
           <br/>
         </template>
       </div>
+    </div>
+    <br/>
+    <div>
+      <dodecatalk-message>{{tape}}</dodecatalk-message>
+    </div>
+    <div style="text-align:right">
+    <div class="my-button" on-click="{{clearTape}}">clear</div>
+    <div class="my-button" on-click="{{playTape}}">play</div>
     </div>
   </template>
   <script type="application/dart" src="keypad_full.dart"></script>
