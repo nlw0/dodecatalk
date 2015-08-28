@@ -16,6 +16,8 @@ class KeypadFull extends PolymerElement {
 
   static const keyboardCommandTranslation = const {
     KeyCode.BACKSPACE: 'del',
+    KeyCode.EQUALS: 'del',
+    KeyCode.DASH: 'clear',
     KeyCode.ENTER: 'play'
   };
 
@@ -109,6 +111,7 @@ class KeypadFull extends PolymerElement {
   }
 
   handleKeyDown(KeyboardEvent e) {
+    e.preventDefault();
     if (keyboardNoteTranslation.containsKey(e.keyCode)) {
       final note = keyboardNoteTranslation[e.keyCode];
       play(note);
@@ -116,10 +119,12 @@ class KeypadFull extends PolymerElement {
       key.classes.add("pressed_key");
     } else if (keyboardCommandTranslation.containsKey(e.keyCode)) {
       final cmd = keyboardCommandTranslation[e.keyCode];
-      if (cmd=="del") {
+      if (cmd == "del") {
         parsedTape.removeLast();
         tape = parsedTape.join("");
-      } else if (cmd=="play") {
+      } else if (cmd == "clear") {
+        clearTape();
+      } else if (cmd == "play") {
         playTape();
       }
     }
@@ -152,7 +157,11 @@ class KeypadFull extends PolymerElement {
     player.play(note);
   }
 
-  clearTape(Event e, var detail, Node target) {
+  handleClearTape(Event e, var detail, Node target) {
+    clearTape();
+  }
+
+  clearTape() {
     parsedTape = [];
     tape = parsedTape.join("");
   }
